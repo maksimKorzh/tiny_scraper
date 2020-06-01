@@ -17,7 +17,7 @@ from urllib.request import urlopen
 import json
 import re
 
-# parser
+# HTML parser
 def parse(url, *args, **kwargs):
     try:
         # create request object
@@ -76,8 +76,20 @@ def parse(url, *args, **kwargs):
         # fix tag attributes type
         for item in content:
             try:
-                item['attrs'] = item['attrs'][0]
-            
+                # init temp attributes dictionary
+                temp_attrs = {}
+                
+                # loop over attributes list
+                for attr in item['attrs']:
+                    key = list(attr.items())[0][0]
+                    val = list(attr.items())[0][-1]
+                    
+                    # append key value pairs
+                    temp_attrs[key] = val
+                
+                # update tag attributes
+                item['attrs'] = temp_attrs
+
             except:
                 item['attrs'] = {}
         
@@ -105,7 +117,7 @@ def parse(url, *args, **kwargs):
         return content
     
     except Exception as e:
-        print(' Tiny Scraper: error', e)
+        print(' Tiny Scraper:', e)
 
 # tests
 if __name__ == '__main__':

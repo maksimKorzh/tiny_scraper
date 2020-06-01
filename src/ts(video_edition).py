@@ -17,7 +17,7 @@ from urllib.request import urlopen
 import json
 import re
 
-# parser
+# HTML parser
 def parse(url, *args, **kwargs):
     try:
         # create request object

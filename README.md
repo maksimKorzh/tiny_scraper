@@ -1,11 +1,5 @@
-# tiny_scraper
-Minimalist web scraping library written in bare python just for fun)
-
-# BMSL
-Bare minimum web scraping library
-
-# Disclaimer
-Please don't take it too serious - it's made more like for educational purposes rather than for production
+# Tiny Scraper
+Beginners friendly WEB SCRAPING library intended to improve your python data structures referencing skills
 
 # How to use
 ```python

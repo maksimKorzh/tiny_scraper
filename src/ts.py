@@ -19,44 +19,57 @@ import csv
 import re
 
 # HTML parser
-def parse(url, *args, **kwargs):
+def parse(uri, *args, **kwargs):
     try:
-        # create request object
-        request = Request(url, **kwargs)
-        
-        # handle method keyword availability
         try:
-            request.__dict__['method']
+            # create request object
+            request = Request(uri, **kwargs)
+            
+            # handle method keyword availability
+            try:
+                request.__dict__['method']
+            
+            except:
+                request.__dict__['method'] = 'GET'
+
+            # print request info
+            print(' Tiny Scraper: HTTP "%s" to URL: %s' % 
+                     (request.__dict__['method'], uri))
+
+            # make HTTP request to the target URL
+            response = urlopen(request)
+
+            # print response status code
+            print(' Tiny Scraper: Response %s' % response.getcode())
+
+            # extract HTML text from response
+            text = response.read().decode(encoding='utf-8', errors='ignore')
         
         except:
-            request.__dict__['method'] = 'GET'
-
-        # print request info
-        print(' Tiny Scraper: HTTP "%s" to URL: %s' % 
-                 (request.__dict__['method'], url))
-
-        # make HTTP request to the target URL
-        response = urlopen(request)
-
-        # print response status code
-        print(' Tiny Scraper: Response %s' % response.getcode())
-
-        # extract HTML text from response
-        response = response.read().decode(encoding='utf-8', errors='ignore')
-
+            # init empty response
+            response = 'local file source'
+        
+            # init local HTML content
+            text = ''
+            
+            # open local HTML file
+            with open(uri, 'r') as f:
+                for line in f.read():
+                    text += line        
+        
         # init regex to parse HTML
         regex = r'''(< *\w+( +\w+( *= *[\"|'][^\"|^']+[\"|'])?)* */? *>)([^<]*)'''        
 
         # try custom regular expresiion if available
         try:
             regex = args[0]
-            print(' Tiny Scraper: using custom regular expression %s', regex)
+            print(' Tiny Scraper: using custom regular expression %s' % regex)
         
         except:
             pass
             
         # parse content
-        content = [
+        tags = [
             {
                 'tag': item[0].strip('<>').split()[0],
                 'attrs': [
@@ -71,11 +84,11 @@ def parse(url, *args, **kwargs):
                 'text': item[-1]
             }
             for item in
-            re.findall(regex, response)
+            re.findall(regex, text)
         ]
         
         # fix tag attributes type
-        for item in content:
+        for item in tags:
             try:
                 # init temp attributes dictionary
                 temp_attrs = {}
@@ -98,7 +111,7 @@ def parse(url, *args, **kwargs):
         all_attrs = []
         
         # loop over all tags
-        for item in content:
+        for item in tags:
             # store all available tag attributes
             [
                 all_attrs.append(attr)
@@ -110,7 +123,7 @@ def parse(url, *args, **kwargs):
         all_attrs = dict.fromkeys(all_attrs, '')
         
         # apply unique attributes
-        for item in content:
+        for item in tags:
             if item['attrs'] == {}:
                 item['attrs'] = all_attrs
 
@@ -123,7 +136,11 @@ def parse(url, *args, **kwargs):
                         item['attrs'][key] = ''
  
         # return parsed content
-        return content
+        return {
+            'response': response,
+            'text': text,
+            'tags': tags
+        }
     
     except Exception as e:
         print(' Tiny Scraper:', e)
@@ -133,31 +150,36 @@ if __name__ == '__main__':
     # parse quotes
     content = parse('http://quotes.toscrape.com')
     
+    # get response object
+    print('\n\nResponse object:\n', content['response'])
+    
+    # get response text
+    print('\n\nHTML document:\n', content['text'])
+
+    # print all tag elements
+    print('\n\nAll tag elements:\n')
+    print(json.dumps(content['tags'], indent=2))
+    
     # print all tag names
     print('\n\nAll tag names:\n')
-    for item in content:
+    for item in content['tags']:
         print(item['tag'])
     
     # print all tag attributes
     print('\n\nAll tag attributes:\n')
-    for item in content:
+    for item in content['tags']:
         print(item['attrs'])
     
     # print all tag textual nodes
     print('\n\nAll tag text:\n')
-    for item in content:
-        print(item['text'])
-    
-    # print all tag elements
-    print('\n\nAll tag elements:\n')
-    print(json.dumps(content, indent=2))
-    
+    for item in content['tags']:
+        print(item['text'])    
     
     # print all quotes
     print('\n\nExtracted quotes:\n')
     quotes = [
         print(item['text'])
-        for item in content
+        for item in content['tags']
         if item['tag'] == 'span' and
            item['attrs']['class'] == 'text'
     ]
@@ -166,7 +188,7 @@ if __name__ == '__main__':
     print('\n\nExtracted authors:\n')
     authors = [
         print(item['text'])
-        for item in content
+        for item in content['tags']
         if item['tag'] == 'small' and
            item['attrs']['class'] == 'author'
     ]
@@ -175,7 +197,7 @@ if __name__ == '__main__':
     print('\n\nAuthor detail URLs:\n')
     links = [
         print(item['attrs']['href'])
-        for item in content
+        for item in content['tags']
         if item['tag'] == 'a' and
            item['text'] == '(about)'
     ]
@@ -184,7 +206,7 @@ if __name__ == '__main__':
     print('\n\nAll tags:\n')
     tags = [
         print(item['text'], item['attrs']['href'])
-        for item in content
+        for item in content['tags']
         if item['tag'] == 'a' and
            item['attrs']['class'] == 'tag'
     ]

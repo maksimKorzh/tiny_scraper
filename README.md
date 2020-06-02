@@ -1,23 +1,8 @@
 # Tiny Scraper
 Beginners friendly WEB SCRAPING library intended to improve your python data structures referencing skills
 
-# How to use
+# How to use CHEAT SHEET
 ```python
-##########################################
-#
-#              Tiny Scraper
-#
-#    A minimalist web scraping library
-#         (created just for fun)
-#
-#                   by
-#
-#            Code Monkey King
-#
-##########################################
-#               CHEAT SHEET
-##########################################
-
 # # import Tiny Scraper assumong it's located in the same directory
 from ts import *
 

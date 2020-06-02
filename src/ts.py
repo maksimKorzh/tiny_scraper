@@ -15,6 +15,7 @@
 from urllib.request import Request
 from urllib.request import urlopen
 import json
+import csv
 import re
 
 # HTML parser
@@ -112,7 +113,15 @@ def parse(url, *args, **kwargs):
         for item in content:
             if item['attrs'] == {}:
                 item['attrs'] = all_attrs
-                
+
+            else:
+                for key in all_attrs:
+                    try:
+                        item['attrs'][key]
+                    
+                    except:
+                        item['attrs'][key] = ''
+ 
         # return parsed content
         return content
     
@@ -123,7 +132,7 @@ def parse(url, *args, **kwargs):
 if __name__ == '__main__':
     # parse quotes
     content = parse('http://quotes.toscrape.com')
-
+    
     # print all tag names
     print('\n\nAll tag names:\n')
     for item in content:
@@ -170,6 +179,19 @@ if __name__ == '__main__':
         if item['tag'] == 'a' and
            item['text'] == '(about)'
     ]
+    
+    # print all tags
+    print('\n\nAll tags:\n')
+    tags = [
+        print(item['text'], item['attrs']['href'])
+        for item in content
+        if item['tag'] == 'a' and
+           item['attrs']['class'] == 'tag'
+    ]
+                
+                
+                
+
 
 
 

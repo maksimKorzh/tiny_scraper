@@ -1,9 +1,25 @@
 # Tiny Scraper
 Beginners friendly WEB SCRAPING library intended to improve your python data structures referencing skills
 
-# How to use CHEAT SHEET
+# Documentation
+    FUNCTION:
+        parse(uri, *args, **kwargs)
+            uri - target URL or local file PATH to request, e.g. "http://quotes.toscrape.com", "local.html"
+          *args - REGEX string, e.g. r'your_regex' - supposed to be the ONLY non-keyword argument
+       **kwargs - keyword arguments wraping urllib.request.Request arguments, e.g. (method="POST", headers={'accept': '*'})
+       
+    RETURNS:
+        Dictionary with the following keys: ['response'], ['text'], ['tags'] where
+            response - is a urllib.request.urlopen() response object
+                text - response text in "utf-8" encoding
+                tags - list of dictionaries with the following keys: ['tag'], ['attrs'], ['text'] where
+                           tag - tag name
+                         attrs - dictionary of tag attributes, e.g. {'class': 'text', 'id': 'card'}
+                          text - textual node of a tag
+
+# How to use it (CHEAT SHEET)
 ```python
-# # import Tiny Scraper assumong it's located in the same directory
+# # import Tiny Scraper assuming it's located in the same directory
 from ts import *
 
 # make HTTP request
@@ -71,22 +87,6 @@ tags = [
 ]
 
 ```
-
-# Documentation
-    FUNCTION:
-        parse(uri, *args, **kwargs)
-            uri - target URL or local file PATH to request, e.g. "http://quotes.toscrape.com", "local.html"
-          *args - REGEX string, e.g. r'your_regex' - supposed to be the ONLY non-keyword argument
-       **kwargs - keyword arguments wraping urllib.request.Request arguments, e.g. (method="POST", headers={'accept': '*'})
-       
-    RETURNS:
-        Dictionary with the following keys: ['response'], ['text'], ['tags'] where
-            response - is a urllib.request.urlopen() response object
-                text - response text in "utf-8" encoding
-                tags - list of dictionaries with the following keys: ['tag'], ['attrs'], ['text'] where
-                           tag - tag name
-                         attrs - dictionary of tag attributes, e.g. {'class': 'text', 'id': 'card'}
-                          text - textual node of a tag
 
 # Tiny Scraper CRASH COURSE (Basic)
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/btlVL8J6TiY/0.jpg)](https://www.youtube.com/watch?v=btlVL8J6TiY)

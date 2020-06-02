@@ -5,8 +5,12 @@ Beginners friendly WEB SCRAPING library intended to improve your python data str
     FUNCTION:
         parse(uri, *args, **kwargs)
             uri - target URL or local file PATH to request, e.g. "http://quotes.toscrape.com", "local.html"
+            
           *args - REGEX string to parse HTML if you want to replace built in one, e.g. r'your_regex'
-       **kwargs - keyword arguments wraping urllib.request.Request arguments, e.g. (method="POST", headers={'accept': '*'})
+                  SUPPOSED to be the ONLY non-keyword argument
+
+       **kwargs - keyword arguments wraping urllib.request.Request arguments,
+                  e.g. (method="POST", headers={'accept': '*', 'user-agent': 'tiny scraper'})
        
     RETURNS:
         Dictionary with the following keys: ['response'], ['text'], ['tags'] where

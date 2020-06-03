@@ -38,9 +38,15 @@ def parse(uri, *args, **kwargs):
             print(' Tiny Scraper: HTTP "%s" to URL: %s' % 
                      (request.__dict__['method'], uri))
 
-            # make HTTP request to the target URL
-            response = urlopen(request)
-
+            try:
+                # make HTTP request to the target URL
+                response = urlopen(request)
+            
+            except Exception as e:
+                if e.code in [400, 403, 405]:
+                    print(' Tiny Scraper: %s' % e)
+                    return
+            
             # print response status code
             print(' Tiny Scraper: Response %s' % response.getcode())
 
@@ -215,7 +221,6 @@ if __name__ == '__main__':
                 
                 
                 
-
 
 
 
